@@ -23,6 +23,9 @@
 #    pragma GCC system_header
 #endif
 
+#undef MINSIGSTKSZ
+  #define MINSIGSTKSZ 16384
+
 // start catch_suppress_warnings.h
 
 #ifdef __clang__
