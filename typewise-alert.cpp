@@ -1,9 +1,7 @@
 #include "typewise-alert.h"
-#include <stdio.h>
-#include<iostream>
-#include<map>
 
-using namespace std;
+
+
 
 BreachType inferBreach(double value, double lowerLimit, double upperLimit) {
   if(value < lowerLimit) {
@@ -15,13 +13,11 @@ BreachType inferBreach(double value, double lowerLimit, double upperLimit) {
   return NORMAL;
 }
 
-map<int, int> Cooling_Lower_limit { { 0, 0}, { 1,0 },{2,0} };
-map<int, int> Cooling_Upper_limit { { 0, 35}, { 1,45 },{2,40}} ;
-
+map<CoolingType,Limit> CoolingInfo = {{PASSIVE_COOLING,{0,35}},{MED_ACTIVE_COOLING,{0,40}},{HI_ACTIVE_COOLING,{0,45}}};
 BreachType classifyTemperatureBreach(
     CoolingType coolingType, double temperatureInC) {
-  int lowerLimit = Cooling_Lower_limit[coolingType];
-  int upperLimit = Cooling_Upper_limit[coolingType];
+  int lowerLimit = CoolingInfo[coolingType].lowerlimit;
+  int upperLimit = CoolingInfo[coolingType].upperlimit;
   
   return inferBreach(temperatureInC, lowerLimit, upperLimit);
 }
@@ -55,14 +51,17 @@ const char* convert_enum_to_string[] = {
     
 };
 
+map<BreachType,string> AlertInfo = {{TOO_LOW,"Hi, the temperature is too  Low"},
+                                      {TOO_HIGH,"Hi, the temperature is too  High"},
+                                      {NORMAL,""}};
 void sendToEmail(BreachType breachType)
  {
   const char* recepient = "a.b@c.com";
-  if(breachType==TOO_LOW || breachType==TOO_HIGH)
+  if(breachType!=NORMAL)
   {
       printf("To: %s\n", recepient);
-      std::cout<<"Hi, the temperature is too "<<convert_enum_to_string[breachType] <<std::endl;
+      std::cout<<AlertInfo[breachType] <<std::endl;
   }
-  else{}
+
       
   }
