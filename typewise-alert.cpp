@@ -41,25 +41,22 @@ void checkAndAlert(
 
 void sendToController(BreachType breachType) {
   const unsigned short header = 0xfeed;
-  printf("%x : %x\n", header, breachType);
+  std::cout<< std::hex << header<<" : ";
+  std::cout<< std::hex << breachType<<std::endl;
+//  printf("%x : %x\n", header, breachType);
 }
 
-const char* convert_enum_to_string[] = {
-    "NORMAL",
-    "LOW",
-    "HIGH"
-    
-};
 
-map<BreachType,string> AlertInfo = {{TOO_LOW,"Hi, the temperature is too  Low"},
-                                      {TOO_HIGH,"Hi, the temperature is too  High"},
+map<BreachType,string> AlertInfo = {{TOO_LOW," Hi, the temperature is too  Low"},
+                                      {TOO_HIGH," Hi, the temperature is too  High"},
                                       {NORMAL,""}};
 void sendToEmail(BreachType breachType)
  {
   const char* recepient = "a.b@c.com";
   if(breachType!=NORMAL)
   {
-      printf("To: %s\n", recepient);
+      //printf("To: %s\n", recepient);
+      std::cout<<"To: "<<std::endl<<recepient;
       std::cout<<AlertInfo[breachType] <<std::endl;
   }
 
