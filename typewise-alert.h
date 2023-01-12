@@ -1,4 +1,9 @@
 #pragma once
+#include <stdio.h>
+#include<iostream>
+#include<map>
+
+using namespace std;
 
 typedef enum {
   PASSIVE_COOLING,
@@ -12,8 +17,15 @@ typedef enum {
   TOO_HIGH
 } BreachType;
 
+
+
 BreachType inferBreach(double value, double lowerLimit, double upperLimit);
 BreachType classifyTemperatureBreach(CoolingType coolingType, double temperatureInC);
+
+typedef struct{
+int lowerlimit;
+int upperlimit;
+}Limit;
 
 typedef enum {
   TO_CONTROLLER,

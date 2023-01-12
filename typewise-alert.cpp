@@ -1,5 +1,7 @@
 #include "typewise-alert.h"
-#include <stdio.h>
+
+
+
 
 BreachType inferBreach(double value, double lowerLimit, double upperLimit) {
   if(value < lowerLimit) {
@@ -11,24 +13,12 @@ BreachType inferBreach(double value, double lowerLimit, double upperLimit) {
   return NORMAL;
 }
 
+map<CoolingType,Limit> CoolingInfo = {{PASSIVE_COOLING,{0,35}},{MED_ACTIVE_COOLING,{0,40}},{HI_ACTIVE_COOLING,{0,45}}};
 BreachType classifyTemperatureBreach(
     CoolingType coolingType, double temperatureInC) {
-  int lowerLimit = 0;
-  int upperLimit = 0;
-  switch(coolingType) {
-    case PASSIVE_COOLING:
-      lowerLimit = 0;
-      upperLimit = 35;
-      break;
-    case HI_ACTIVE_COOLING:
-      lowerLimit = 0;
-      upperLimit = 45;
-      break;
-    case MED_ACTIVE_COOLING:
-      lowerLimit = 0;
-      upperLimit = 40;
-      break;
-  }
+  int lowerLimit = CoolingInfo[coolingType].lowerlimit;
+  int upperLimit = CoolingInfo[coolingType].upperlimit;
+  
   return inferBreach(temperatureInC, lowerLimit, upperLimit);
 }
 
@@ -51,21 +41,24 @@ void checkAndAlert(
 
 void sendToController(BreachType breachType) {
   const unsigned short header = 0xfeed;
-  printf("%x : %x\n", header, breachType);
+  std::cout<< std::hex << header<<" : ";
+  std::cout<< std::hex << breachType<<std::endl;
+//  printf("%x : %x\n", header, breachType);
 }
 
-void sendToEmail(BreachType breachType) {
+
+map<BreachType,string> AlertInfo = {{TOO_LOW," Hi, the temperature is too  Low"},
+                                      {TOO_HIGH," Hi, the temperature is too  High"},
+                                      {NORMAL,""}};
+void sendToEmail(BreachType breachType)
+ {
   const char* recepient = "a.b@c.com";
-  switch(breachType) {
-    case TOO_LOW:
-      printf("To: %s\n", recepient);
-      printf("Hi, the temperature is too low\n");
-      break;
-    case TOO_HIGH:
-      printf("To: %s\n", recepient);
-      printf("Hi, the temperature is too high\n");
-      break;
-    case NORMAL:
-      break;
+  if(breachType!=NORMAL)
+  {
+      //printf("To: %s\n", recepient);
+      std::cout<<"To: "<<std::endl<<recepient;
+      std::cout<<AlertInfo[breachType] <<std::endl;
   }
-}
+
+      
+  }
